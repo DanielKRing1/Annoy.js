@@ -1,28 +1,38 @@
 import { Vector } from '../types';
 import { dot } from '../utils/VectorUtils';
 
+import { getRand } from '../utils/Random';
+
 export class Hyperplane {
     private centroid: Vector;
     private w: Vector;
     private b: number = 0;
 
     constructor(centroid: Vector) {
+        const dim: number = centroid.length;
+
         this.centroid = centroid;
-        const i0: number = centroid[0];
-        const i1: number = -1 * centroid[1];
 
-        const dim: number = this.centroid.length;
-        const normal = new Array(dim).fill(0);
-        normal[0] = i1;
-        normal[1] = i0;
+        // 1. Get random number between 0 and 1
+        const rand: number = Math.random();
 
-        this.w = normal;
+        // 2. Get min and max bounds for a random point
+        const minVector: Vector = centroid.map((val: number) => -5 * Math.abs(val));
+        const maxVector: Vector = centroid.map((val: number) => 5 * Math.abs(val));
+
+        // 3. Get random point
+        const randPoint: Vector = [...new Array(dim)].map((empty, i) => getRand(minVector[i], maxVector[i]));
+
+        // 4. Set random point as 'w'
+        this.w = randPoint;
+
+        // 5. Get determinant of centroid and random point, set as 'b'
+        this.b = dot(centroid, randPoint);
     }
 
     public getSide(p: Vector): number {
-        const dim: number = this.w.length;
         const side: number = dot(this.w, p);
 
-        return side - dim * this.b;
+        return side - this.b;
     }
 }

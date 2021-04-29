@@ -1,4 +1,4 @@
-import { AnnoyTree } from './components/AnnoyTrre';
+import { AnnoyTree } from './components/AnnoyTree';
 import { vectorDistSqr } from './utils/VectorUtils';
 import * as Types from './types';
 
