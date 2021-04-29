@@ -2,7 +2,7 @@
     "name": "annoy.js",
     "version": "1.0.1",
     "description": "",
-    "main": "index.js",
+    "main": "Annoy.ts",
     "scripts": {
         "test": "jest"
     },
