@@ -1,8 +1,12 @@
 {
     "name": "annoy.js",
-    "version": "1.0.5",
+    "version": "1.0.14",
     "description": "",
-    "main": "Annoy.ts",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib/**/*"
+    ],
     "scripts": {
         "test": "jest",
         "build": "tsc"
@@ -11,10 +15,22 @@
     "license": "ISC",
     "dependencies": {},
     "devDependencies": {
-        "@types/jest": "^26.0.23"
+        "@types/jest": "^26.0.23",
+        "typescript": "^4.2.4"
     },
     "repository": {
         "type": "git",
         "url": "https://github.com/DanielKRing1/Annoy.js.git"
-    }
+    },
+    "keywords": [
+        "tree",
+        "binary tree",
+        "knn",
+        "nearest neighbors",
+        "annoy",
+        "hyperplane",
+        "hyperplane search tree",
+        "vector search tree",
+        "n dimenesional"
+    ]
 }

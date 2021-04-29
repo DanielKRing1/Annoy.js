@@ -1,6 +1,8 @@
 import { AnnoyTree } from './components/AnnoyTrre';
 import { vectorDistSqr } from './utils/VectorUtils';
-import { Vector } from './types';
+import * as Types from './types';
+
+export { Types };
 
 export default class Annoy {
     private forest: AnnoyTree[];
@@ -9,28 +11,28 @@ export default class Annoy {
         this.forest = [...new Array(forestSize)].map(() => new AnnoyTree(maxValues));
     }
 
-    public get(p: Vector, max: number): Vector[] {
-        const closestFromAllTrees: Set<Vector> = new Set();
+    public get(p: Types.Vector, max: number): Types.Vector[] {
+        const closestFromAllTrees: Set<Types.Vector> = new Set();
 
         for (let i = 0; i < this.forest.length; i++) {
             // 1. Get tree
             const tree: AnnoyTree = this.forest[i];
 
             // 2. Get points that tree has partitioned as "closest" to p
-            const closestInTree: Vector[] = tree.get(p);
+            const closestInTree: Types.Vector[] = tree.get(p);
 
-            closestInTree.forEach((closePoint: Vector) => closestFromAllTrees.add(closePoint));
+            closestInTree.forEach((closePoint: Types.Vector) => closestFromAllTrees.add(closePoint));
         }
 
-        let result: Vector[];
+        let result: Types.Vector[];
 
-        if (max && closestFromAllTrees.size > max) result = Array.from(closestFromAllTrees).sort((a: Vector, b: Vector) => vectorDistSqr(a, p) - vectorDistSqr(b, p));
+        if (max && closestFromAllTrees.size > max) result = Array.from(closestFromAllTrees).sort((a: Types.Vector, b: Types.Vector) => vectorDistSqr(a, p) - vectorDistSqr(b, p));
         else result = Array.from(closestFromAllTrees);
 
         return result;
     }
 
-    public add(p: Vector) {
+    public add(p: Types.Vector) {
         for (let i = 0; i < this.forest.length; i++) {
             const tree: AnnoyTree = this.forest[i];
 
