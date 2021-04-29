@@ -3,11 +3,13 @@ import { Vector } from '../types';
 import { addVectors, divVectorScalar } from '../utils/VectorUtils';
 
 export class AnnoyTree {
-    public dividingHyperplane: Hyperplane;
-    public right: AnnoyTree;
-    public left: AnnoyTree;
-    public values: Vector[];
+    public dividingHyperplane!: Hyperplane;
+    public right!: AnnoyTree;
+    public left!: AnnoyTree;
+    public values!: Vector[];
     public maxValues: number;
+
+    private isLeaf!: boolean;
 
     public depth: number;
     public side: string;
@@ -24,7 +26,7 @@ export class AnnoyTree {
     }
 
     public get(p: Vector): Vector[] {
-        switch (this.isLeaf()) {
+        switch (this.isLeaf) {
             case true:
                 return this.values;
 
@@ -36,7 +38,7 @@ export class AnnoyTree {
     }
 
     public addPoint(newPoint: Vector) {
-        switch (this.isLeaf()) {
+        switch (this.isLeaf) {
             // IF LEAF: Pool points into Leaf Nodes
             case true:
                 // 1. Add new point to pool of points
@@ -70,23 +72,17 @@ export class AnnoyTree {
     // STATE MANAGEMENT
 
     private setAsLeaf(): void {
-        this.dividingHyperplane = null;
-        this.right = null;
-        this.left = null;
+        this.isLeaf = true;
 
         this.values = [];
     }
 
     private setAsInnerNode(dividingHyperplane: Hyperplane = this.genDividingHyperplane()): void {
+        this.isLeaf = false;
+
         this.dividingHyperplane = dividingHyperplane;
         this.right = new AnnoyTree(this.maxValues, this.depth + 1, `${this.side}-right`);
         this.left = new AnnoyTree(this.maxValues, this.depth + 1, `${this.side}-left`);
-
-        this.values = null;
-    }
-
-    private isLeaf(): boolean {
-        return this.dividingHyperplane === null && this.right === null && this.left === null && this.values !== null;
     }
 
     // SPLITTING UTILS

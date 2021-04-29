@@ -2,8 +2,8 @@ import { Vector } from '../types';
 import { dot } from '../utils/VectorUtils';
 
 export class Hyperplane {
-    private centroid: Vector = null;
-    private w: Vector = null;
+    private centroid: Vector;
+    private w: Vector;
     private b: number = 0;
 
     constructor(centroid: Vector) {

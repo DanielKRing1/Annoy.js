@@ -1,5 +1,5 @@
-import Annoy from '../Annoy';
-import { Vector } from '../types';
+import Annoy from '../src/Annoy';
+import { Vector } from '../src/types';
 
 describe('Annoy default export', () => {
     it('should execute successfully', () => {
