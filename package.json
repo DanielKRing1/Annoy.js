@@ -4,12 +4,14 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest"
     },
     "author": "",
     "license": "ISC",
     "dependencies": {},
-    "devDependencies": {},
+    "devDependencies": {
+        "@types/jest": "^26.0.23"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/DanielKRing1/Annoy.js.git"
