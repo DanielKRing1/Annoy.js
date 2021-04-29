@@ -1,6 +1,6 @@
 {
     "name": "annoy.js",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "",
     "main": "index.js",
     "scripts": {
@@ -9,5 +9,9 @@
     "author": "",
     "license": "ISC",
     "dependencies": {},
-    "devDependencies": {}
+    "devDependencies": {},
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DanielKRing1/Annoy.js.git"
+    }
 }
