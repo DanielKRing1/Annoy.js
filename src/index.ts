@@ -26,7 +26,10 @@ export default class Annoy {
 
         let result: Types.Vector[];
 
-        if (max && closestFromAllTrees.size > max) result = Array.from(closestFromAllTrees).sort((a: Types.Vector, b: Types.Vector) => vectorDistSqr(a, p) - vectorDistSqr(b, p));
+        if (max && closestFromAllTrees.size > max)
+            result = Array.from(closestFromAllTrees)
+                .sort((a: Types.Vector, b: Types.Vector) => vectorDistSqr(a, p) - vectorDistSqr(b, p))
+                .slice(0, max);
         else result = Array.from(closestFromAllTrees);
 
         return result;
