@@ -26,7 +26,7 @@ npm install annoy.js
 
 3.2. If a point (P) is on the "left" of the hyperplane, it trickles down to LL. If it is on the right, it trickles down to LR<sup>2</sup>.
 
-4. Annoy.js builds 'forestSize' number of trees, where each tree is intended to split the total set of points into a slightly different tree structure.
+4. Annoy.js builds 'forestSize' number of trees, where each tree is intended to use a distinct hyperplane, which would split the total set of points into a slightly different tree structure.
 
 5. When a user queries Annoy for the "K" nearest neighbors to a point (Q), it traverses each tree in the forest for its pool of nearest neighbors and collects each pool into a set of points (S). If S contains more than K points, Annoy returns the K closest points to Q from S, else Annoy simply returns S.
 
