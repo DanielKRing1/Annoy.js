@@ -1,17 +1,13 @@
 {
-  "name": "annoy",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "@rayyamhk/matrix": "^1.0.6"
-  },
-  "devDependencies": {
-    "@types/node": "^15.0.1"
-  }
+    "name": "annoy.js",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "",
+    "license": "ISC",
+    "dependencies": {},
+    "devDependencies": {}
 }
