@@ -3,24 +3,17 @@ import { Vector } from '../types';
 import { addVectors, divVectorScalar } from '../utils/VectorUtils';
 
 export class AnnoyTree {
-    public dividingHyperplane!: Hyperplane;
-    public right!: AnnoyTree;
-    public left!: AnnoyTree;
-    public values!: Vector[];
-    public maxValues: number;
+    private dividingHyperplane!: Hyperplane;
+    private right!: AnnoyTree;
+    private left!: AnnoyTree;
+
+    private maxValues: number;
+    private values!: Vector[];
 
     private isLeaf!: boolean;
 
-    public depth: number;
-    public side: string;
-
-    constructor(maxValues: number, depth: number = 0, side: string = 'root') {
+    constructor(maxValues: number) {
         this.maxValues = maxValues;
-
-        if (depth > 20) throw new Error(`Too deep! Depth of ${depth}`);
-        this.side = side;
-
-        this.depth = depth;
 
         this.setAsLeaf();
     }
@@ -81,8 +74,8 @@ export class AnnoyTree {
         this.isLeaf = false;
 
         this.dividingHyperplane = dividingHyperplane;
-        this.right = new AnnoyTree(this.maxValues, this.depth + 1, `${this.side}-right`);
-        this.left = new AnnoyTree(this.maxValues, this.depth + 1, `${this.side}-left`);
+        this.right = new AnnoyTree(this.maxValues);
+        this.left = new AnnoyTree(this.maxValues);
     }
 
     // SPLITTING UTILS
