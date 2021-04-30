@@ -3,6 +3,8 @@ import { Vector } from '../types';
 import { addVectors, divVectorScalar } from '../utils/VectorUtils';
 
 export class AnnoyTree {
+    private dimensions: number = -1;
+
     private dividingHyperplane!: Hyperplane;
     private right!: AnnoyTree;
     private left!: AnnoyTree;
@@ -18,7 +20,11 @@ export class AnnoyTree {
         this.setAsLeaf();
     }
 
+    // PUBLIC API
+
     public get(p: Vector): Vector[] {
+        this.validatePoint(p);
+
         switch (this.isLeaf) {
             case true:
                 return this.values;
@@ -31,6 +37,8 @@ export class AnnoyTree {
     }
 
     public addPoint(newPoint: Vector) {
+        this.validatePoint(newPoint);
+
         switch (this.isLeaf) {
             // IF LEAF: Pool points into Leaf Nodes
             case true:
@@ -59,6 +67,19 @@ export class AnnoyTree {
             case false:
                 this.trickleDown(newPoint);
                 break;
+        }
+    }
+
+    // ERROR CHECKING
+
+    private validatePoint(p: Vector): void {
+        // Dimensionality has already been set
+        if (this.dimensions !== -1) {
+            // Confirm that the given point conforms to this dimensionality
+            if (p.length !== this.dimensions) throw new Error(`Failed to 'get()'. Please provide a vector of ${this.dimensions} dimensionality`);
+        } else {
+            // Set dimensionality based on the first point provided
+            this.dimensions = p.length;
         }
     }
 
