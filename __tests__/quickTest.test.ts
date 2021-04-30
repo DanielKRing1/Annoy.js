@@ -4,7 +4,7 @@ import { Vector } from '../src/types';
 describe('Adding points and querying Annoy.js ', () => {
     it('should execute successfully', () => {
         const POINT_COUNT = 1000;
-        const VECTOR_LEN = 2;
+        const VECTOR_LEN = 10;
         const K = 20;
 
         const a: Annoy = new Annoy(10, 50);
