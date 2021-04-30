@@ -60,7 +60,7 @@ Add a single point to the Annoy forest
 
 #### get(point: number[], k: number): number[][]
 
-Get the 'k' approxximate nearest neighbors to a given 'point'
+Get the 'k' approximate nearest neighbors to a given 'point'
 
 ## How it works
 
