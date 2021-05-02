@@ -1,9 +1,9 @@
 import { Hyperplane } from './Hyperplane';
-import { Vector } from '../types';
+import { InnerNode, Vector, AnnoyInnerNodeJsonKey, LeafNode, AnnoyTreeJson } from '../types';
 import { addVectors, divVectorScalar } from '../utils/VectorUtils';
 
 export class AnnoyTree {
-    private dimensions: number = -1;
+    private dimensions: number;
 
     private dividingHyperplane!: Hyperplane;
     private right!: AnnoyTree;
@@ -14,7 +14,8 @@ export class AnnoyTree {
 
     private isLeaf!: boolean;
 
-    constructor(maxValues: number) {
+    constructor(dimensions: number, maxValues: number) {
+        this.dimensions = dimensions;
         this.maxValues = maxValues;
 
         this.setAsLeaf();
@@ -74,13 +75,8 @@ export class AnnoyTree {
 
     private validatePoint(p: Vector): void {
         // Dimensionality has already been set
-        if (this.dimensions !== -1) {
-            // Confirm that the given point conforms to this dimensionality
-            if (p.length !== this.dimensions) throw new Error(`Failed to 'get()'. Please provide a vector of ${this.dimensions} dimensionality`);
-        } else {
-            // Set dimensionality based on the first point provided
-            this.dimensions = p.length;
-        }
+        // Confirm that the given point conforms to this dimensionality
+        if (p.length !== this.dimensions) throw new Error(`Failed to 'get()'. A vector of ${p.length} dimensionality was provided. Please provide a vector of ${this.dimensions} dimensionality`);
     }
 
     // STATE MANAGEMENT
@@ -91,12 +87,14 @@ export class AnnoyTree {
         this.values = [];
     }
 
-    private setAsInnerNode(dividingHyperplane: Hyperplane = this.genDividingHyperplane()): void {
+    private setAsInnerNode(dividingHyperplane: Hyperplane = this.genDividingHyperplane(), rightTree: AnnoyTree | null = null, leftTree: AnnoyTree | null = null): void {
         this.isLeaf = false;
 
         this.dividingHyperplane = dividingHyperplane;
-        this.right = new AnnoyTree(this.maxValues);
-        this.left = new AnnoyTree(this.maxValues);
+        this.right = rightTree !== null ? rightTree : new AnnoyTree(this.dimensions, this.maxValues);
+        this.left = leftTree !== null ? leftTree : new AnnoyTree(this.dimensions, this.maxValues);
+
+        this.values = [];
     }
 
     // SPLITTING UTILS
@@ -130,5 +128,38 @@ export class AnnoyTree {
         const side: AnnoyTree = this.chooseSide(p);
 
         side.addPoint(p);
+    }
+
+    public toJson(): InnerNode | LeafNode {
+        const children: InnerNode | LeafNode = this.isLeaf
+            ? this.values
+            : {
+                  [AnnoyInnerNodeJsonKey.HYPERPLANE]: this.dividingHyperplane.toJson(),
+                  [AnnoyInnerNodeJsonKey.LEFT]: this.left.toJson(),
+                  [AnnoyInnerNodeJsonKey.RIGHT]: this.right.toJson(),
+              };
+
+        return children;
+    }
+
+    public fromJson(asJson: AnnoyTreeJson): void {
+        if (Array.isArray(asJson)) {
+            // 1. Set values
+            this.setAsLeaf();
+            this.values = asJson;
+        } else {
+            // 2.2. Set right tree
+            const rightTree: AnnoyTree = new AnnoyTree(this.dimensions, this.maxValues);
+            rightTree.fromJson(asJson[AnnoyInnerNodeJsonKey.RIGHT]);
+
+            // 2.3. Set left tree
+            const leftTree: AnnoyTree = new AnnoyTree(this.dimensions, this.maxValues);
+            leftTree.fromJson(asJson[AnnoyInnerNodeJsonKey.LEFT]);
+
+            // 2.1. Set hyperplane
+            const dividingHyperplane: Hyperplane = new Hyperplane();
+            dividingHyperplane.fromJson(asJson[AnnoyInnerNodeJsonKey.HYPERPLANE]);
+            this.setAsInnerNode(dividingHyperplane, rightTree, leftTree);
+        }
     }
 }
