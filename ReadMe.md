@@ -54,11 +54,11 @@ console.log(knn);
 
 Annoy(forestSize: number, maxLeafSize: number)
 
-#### add(point: number[]): void
+#### add(point: { vector: number[], data: any }): void
 
 Add a single point to the Annoy forest
 
-#### get(point: number[], k: number): number[][]
+#### get(vector: number[], k: number): { vector: number[], data: any }[]
 
 Get the 'k' approximate nearest neighbors to a given 'point'
 
@@ -88,7 +88,7 @@ NOTES:
 
 ## Benchmarks
 
-My machine was able to index 1,000,000 points into Annoy in 3 min 55 sec, while a KNN query of the points took a measly 0.365 ms.
+My machine was able to index 1,000,000 128-point vectors into Annoy in 3 min 55 sec, while a KNN query of the points took a measly 0.365 ms.
 
 ## Improvements
 

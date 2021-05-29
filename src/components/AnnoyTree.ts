@@ -1,5 +1,5 @@
 import { Hyperplane } from './Hyperplane';
-import { InnerNode, Vector, AnnoyInnerNodeJsonKey, LeafNode, AnnoyTreeJson } from '../types';
+import { InnerNode, Vector, DataPoint, AnnoyInnerNodeJsonKey, LeafNode, AnnoyTreeJson } from '../types';
 import { addVectors, divVectorScalar } from '../utils/VectorUtils';
 
 export class AnnoyTree {
@@ -10,7 +10,7 @@ export class AnnoyTree {
     private left!: AnnoyTree;
 
     private maxValues: number;
-    private values!: Vector[];
+    private values!: DataPoint[];
 
     private isLeaf!: boolean;
 
@@ -23,7 +23,7 @@ export class AnnoyTree {
 
     // PUBLIC API
 
-    public get(p: Vector): Vector[] {
+    public get(p: Vector): DataPoint[] {
         this.validatePoint(p);
 
         switch (this.isLeaf) {
@@ -37,8 +37,8 @@ export class AnnoyTree {
         }
     }
 
-    public addPoint(newPoint: Vector) {
-        this.validatePoint(newPoint);
+    public addPoint(newPoint: DataPoint) {
+        this.validateDataPoint(newPoint);
 
         switch (this.isLeaf) {
             // IF LEAF: Pool points into Leaf Nodes
@@ -49,7 +49,7 @@ export class AnnoyTree {
                 // 2. Split Node if it owns "too many" points
                 if (this.values.length >= this.maxValues) {
                     // 3. Cache Leaf's pool of points to local variable
-                    const pool: Vector[] = this.values;
+                    const pool: DataPoint[] = this.values;
 
                     // 4. Reset this Node as an "Inner" Node instead of as a Leaf
                     // (Sets this.values = null)
@@ -58,7 +58,7 @@ export class AnnoyTree {
 
                     // 5. Split the pool of points into "right" and "left"
                     for (let i = 0; i < pool.length; i++) {
-                        const point: Vector = pool[i];
+                        const point: DataPoint = pool[i];
                         this.trickleDown(point);
                     }
                 }
@@ -72,6 +72,10 @@ export class AnnoyTree {
     }
 
     // ERROR CHECKING
+
+    private validateDataPoint(vd: DataPoint): void {
+        this.validatePoint(vd.vector);
+    }
 
     private validatePoint(p: Vector): void {
         // Dimensionality has already been set
@@ -100,14 +104,14 @@ export class AnnoyTree {
     // SPLITTING UTILS
 
     private genDividingHyperplane(): Hyperplane {
-        const dim: number = this.values[0].length;
+        const dim: number = this.values[0].vector.length;
 
         // 1. Sum Vectorsin this.values
         const vectorCount: number = this.values.length;
         let vectorSum: Vector = new Array(dim).fill(0);
         for (let i = 0; i < vectorCount; i++) {
             const curPoint = this.values[i];
-            vectorSum = addVectors(vectorSum, curPoint);
+            vectorSum = addVectors(vectorSum, curPoint.vector);
         }
 
         // 2. Divide vectorSum by vectorCount to get average vector/ centroid
@@ -123,9 +127,9 @@ export class AnnoyTree {
         return side >= 0 ? this.right : this.left;
     }
 
-    private trickleDown(p: Vector): void {
+    private trickleDown(p: DataPoint): void {
         // Categorize a point as "right" or "left" based on distance from dividing line
-        const side: AnnoyTree = this.chooseSide(p);
+        const side: AnnoyTree = this.chooseSide(p.vector);
 
         side.addPoint(p);
     }

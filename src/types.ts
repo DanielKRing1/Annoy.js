@@ -1,5 +1,9 @@
 export type Dict<T> = Record<string, T>;
 export type Vector = number[];
+export type DataPoint = {
+    data: any;
+    vector: Vector;
+};
 
 export type AnnoyJson = {
     forest: AnnoyForestJson;
@@ -20,7 +24,7 @@ export interface InnerNode {
     [AnnoyInnerNodeJsonKey.LEFT]: InnerNode | LeafNode;
     [AnnoyInnerNodeJsonKey.RIGHT]: InnerNode | LeafNode;
 }
-export type LeafNode = Vector[];
+export type LeafNode = DataPoint[];
 
 export type HyperplaneJson = {
     [HyperplaneJsonKey.w]: Vector;
