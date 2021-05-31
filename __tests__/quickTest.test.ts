@@ -1,5 +1,5 @@
 import Annoy from '../src';
-import { AnnoyForestJson, AnnoyJson, Vector } from '../src/types';
+import { AnnoyForestJson, AnnoyJson, DataPoint, Vector } from '../src/types';
 
 describe('Adding points and querying Annoy.js ', () => {
     it('should execute successfully', () => {
@@ -10,22 +10,33 @@ describe('Adding points and querying Annoy.js ', () => {
 
         const a: Annoy = new Annoy(FOREST_SIZE, VECTOR_LEN, MAX_VALUES);
 
-        console.time('Annoy setup');
+        // 1. Generate random points
         const POINT_COUNT = 100000;
-        const points: Vector[] = [];
+        const dataPoints: DataPoint[] = [];
         for (let i = 0; i < POINT_COUNT; i++) {
-            // 1. Generate random points
-            const p: Vector = [...new Array(VECTOR_LEN)].map(() => Math.random() * 40);
+            const vector: Vector = [...new Array(VECTOR_LEN)].map(() => Math.random() * 40);
+
+            const dp: DataPoint = {
+                vector,
+                data: i,
+            };
+
+            dataPoints.push(dp);
+        }
+
+        console.time('Annoy setup');
+        for (let i = 0; i < dataPoints.length; i++) {
+            const dp: DataPoint = dataPoints[i];
 
             // 2. Add random points
-            a.add(p);
+            a.add(dp);
         }
         console.timeEnd('Annoy setup');
 
         // 3. Get KNN
         console.time('Annoy KNN');
         const p: Vector = [...new Array(VECTOR_LEN)].map(() => Math.random() * 40);
-        const knn: Vector[] = a.get(p, K);
+        const knn: DataPoint[] = a.get(p, K);
         console.timeEnd('Annoy KNN');
 
         // console.log(knn);
@@ -42,7 +53,7 @@ describe('Adding points and querying Annoy.js ', () => {
 
         // 5. Get KNN from rebuilt Annoy
         console.time('Rebuilt Annoy KNN');
-        const rebuiltKnn: Vector[] = a.get(p, K);
+        const rebuiltKnn: DataPoint[] = a.get(p, K);
         console.timeEnd('Rebuilt Annoy KNN');
 
         // console.log(rebuiltKnn);

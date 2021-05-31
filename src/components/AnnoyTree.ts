@@ -12,7 +12,7 @@ export class AnnoyTree {
     private maxValues: number;
     private values!: DataPoint[];
 
-    private isLeaf!: boolean;
+    private isLeaf: boolean | undefined = undefined;
 
     constructor(dimensions: number, maxValues: number) {
         this.dimensions = dimensions;
@@ -27,17 +27,17 @@ export class AnnoyTree {
         this.validatePoint(p);
 
         switch (this.isLeaf) {
-            case true:
-                return this.values;
-
             case false:
                 const side: AnnoyTree = this.chooseSide(p);
 
                 return side.get(p);
+
+            default:
+                return this.values;
         }
     }
 
-    public addPoint(newPoint: DataPoint) {
+    public addPoint(newPoint: DataPoint): void {
         this.validateDataPoint(newPoint);
 
         switch (this.isLeaf) {
@@ -71,6 +71,82 @@ export class AnnoyTree {
         }
     }
 
+    public addBulkInefficient(bulkPoints: DataPoint[]): void {
+        for (let i = 0; i < bulkPoints.length; i++) {
+            const newPoint: DataPoint = bulkPoints[i];
+
+            this.addPoint(newPoint);
+        }
+    }
+
+    public addBulk(bulkPoints: DataPoint[]): void {
+        switch (this.isLeaf) {
+            // IF LEAF
+            case true:
+                // 1. Add bulk points to existing pool of points
+                this.values.push(...bulkPoints);
+
+                // 2. IF TOO MANY POINTS TO REMAIN A LEAF, then split bulk points and pass down to left and right subtrees
+                if (bulkPoints.length + this.values.length >= this.maxValues) {
+                    // 3. Cache Leaf's pool of points to local variable
+                    const pool: DataPoint[] = this.values;
+
+                    // 4. Reset this Node as an "Inner" Node instead of as a Leaf
+                    // (Sets this.values = null)
+                    // (Also sets this.dividingHyperplane with which to split the pool of points)
+                    this.setAsInnerNode();
+
+                    // 5. Split the pool of points into "leftBulk" and "rightBulk"
+                    const leftBulk: DataPoint[] = [];
+                    const rightBulk: DataPoint[] = [];
+
+                    while (pool.length > 0) {
+                        const p: DataPoint = pool.pop() as DataPoint;
+
+                        // 5.1. Categorize a point as "right" or "left" based on distance from dividing line ( >= 0 is right, < 0 is left )
+                        const side: number = this.dividingHyperplane.getSide(p.vector);
+
+                        // 5.2. Add points to 'leftBulk' or 'rightBulk'
+                        if (side >= 0) rightBulk.push(p);
+                        else leftBulk.push(p);
+                    }
+
+                    // 6. Trickle-down bulk points to left and right subtrees
+                    this.left.addBulk(leftBulk);
+                    this.right.addBulk(rightBulk);
+                }
+                // REMAIN A LEAF
+                else {
+                    this.values.push(...bulkPoints);
+                }
+
+                break;
+
+            // IF NOT LEAF
+            case false:
+                const leftBulk: DataPoint[] = [];
+                const rightBulk: DataPoint[] = [];
+
+                // 1. Split points into bulk subsets for 'left' and 'right' subtrees
+                while (bulkPoints.length > 0) {
+                    const p: DataPoint = bulkPoints.pop() as DataPoint;
+
+                    // 1.1. Categorize a point as "right" or "left" based on distance from dividing line ( >= 0 is right, < 0 is left )
+                    const side: number = this.dividingHyperplane.getSide(p.vector);
+
+                    // 1.2. Add points to 'leftBulk' or 'rightBulk'
+                    if (side >= 0) rightBulk.push(p);
+                    else leftBulk.push(p);
+                }
+
+                // 2. Trickle-down bulk points to left and right subtrees
+                this.left.addBulk(leftBulk);
+                this.right.addBulk(rightBulk);
+
+                break;
+        }
+    }
+
     // ERROR CHECKING
 
     private validateDataPoint(vd: DataPoint): void {
@@ -86,12 +162,20 @@ export class AnnoyTree {
     // STATE MANAGEMENT
 
     private setAsLeaf(): void {
+        // 1. Already set as Leaf Node, short-circuit to prevent overwriting current Leaf Node properties
+        if (this.isLeaf === true) return;
+
+        // 2. Init Leaf Node properties
         this.isLeaf = true;
 
         this.values = [];
     }
 
     private setAsInnerNode(dividingHyperplane: Hyperplane = this.genDividingHyperplane(), rightTree: AnnoyTree | null = null, leftTree: AnnoyTree | null = null): void {
+        // 1. Already set as Inner Node, short-circuit to prevent overwriting current Inner Node properties
+        if (this.isLeaf === false) return;
+
+        // 2. Init Inner Node properties
         this.isLeaf = false;
 
         this.dividingHyperplane = dividingHyperplane;

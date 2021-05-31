@@ -16,35 +16,43 @@ export default class Annoy {
         this.maxValues = maxValues;
     }
 
-    public get(p: Types.Vector, max: number): Types.Vector[] {
-        const closestFromAllTrees: Set<Types.Vector> = new Set();
+    public get(inputVector: Types.Vector, max: number): Types.DataPoint[] {
+        const closestFromAllTrees: Set<Types.DataPoint> = new Set();
 
         for (let i = 0; i < this.forest.length; i++) {
             // 1. Get tree
             const tree: AnnoyTree = this.forest[i];
 
             // 2. Get points that tree has partitioned as "closest" to p
-            const closestInTree: Types.Vector[] = tree.get(p);
+            const closestInTree: Types.DataPoint[] = tree.get(inputVector);
 
-            closestInTree.forEach((closePoint: Types.Vector) => closestFromAllTrees.add(closePoint));
+            closestInTree.forEach((closePoint: Types.DataPoint) => closestFromAllTrees.add(closePoint));
         }
 
-        let result: Types.Vector[];
+        let result: Types.DataPoint[];
 
         if (max && closestFromAllTrees.size > max)
             result = Array.from(closestFromAllTrees)
-                .sort((a: Types.Vector, b: Types.Vector) => vectorDistSqr(a, p) - vectorDistSqr(b, p))
+                .sort((a: Types.DataPoint, b: Types.DataPoint) => vectorDistSqr(a.vector, inputVector) - vectorDistSqr(b.vector, inputVector))
                 .slice(0, max);
         else result = Array.from(closestFromAllTrees);
 
         return result;
     }
 
-    public add(p: Types.Vector) {
+    public add(p: Types.DataPoint) {
         for (let i = 0; i < this.forest.length; i++) {
             const tree: AnnoyTree = this.forest[i];
 
             tree.addPoint(p);
+        }
+    }
+
+    public addBulk(bulkPoints: Types.DataPoint[]) {
+        for (let i = 0; i < this.forest.length; i++) {
+            const tree: AnnoyTree = this.forest[i];
+
+            tree.addBulk(bulkPoints);
         }
     }
 
