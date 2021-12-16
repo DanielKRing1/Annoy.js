@@ -11,8 +11,8 @@
         "test": "npm run build && npx jest",
         "build": "tsc -p tsconfig-build.json",
         "build:commit": "npm run commit -- \"New build\"",
-        "patch": "npm version patch",
         "commit": "git add . && git commit -m ",
+        "patch": "npm version patch",
         "push": "git push origin main",
         "pub": "run-s build build:commit patch push pub:npm",
         "pub:npm": "npm publish"
