@@ -2,16 +2,14 @@
     "compilerOptions": {
         "target": "es5",
         "module": "commonjs",
-        "moduleResolution": "node",
-        "esModuleInterop": true,
-        "resolveJsonModule": true,
-        "lib": ["es6", "es2015"],
-        "types": ["node"],
+        "lib": ["es2017", "es7", "es6", "dom"],
         "declaration": true,
-        "outDir": "lib",
-        "rootDir": "src",
-        "strict": true
-    },
-    "include": ["src"],
-    "exclude": ["lib", "node_modules", "**/__tests__/*"]
+        "outDir": "dist",
+        "strict": true,
+        "esModuleInterop": true
+      },
+      "exclude": [
+        "node_modules",
+        "dist"
+      ]
 }

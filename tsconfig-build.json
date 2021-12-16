@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "lib": ["es6", "es2015"],
+        "types": ["jest", "node"],
+        "declaration": true,
+        "outDir": "dist",
+        "rootDir": "src"
+    },
+    "include": ["src"],
+    "exclude": ["dist", "node_modules", "**/__tests__/*"]
+}

@@ -2,20 +2,26 @@
     "name": "annoy.js",
     "version": "2.1.0",
     "description": "",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "files": [
-        "lib/**/*"
+        "dist/**/*"
     ],
     "scripts": {
-        "test": "jest",
-        "build": "tsc"
+        "test": "npm run build && npx jest",
+        "build": "tsc -p tsconfig-build.json",
+        "build:commit": "npm run commit -- \"New build\"",
+        "patch": "npm version patch",
+        "commit": "git add . && git commit -m ",
+        "push": "git push origin main",
+        "pub": "run-s build build:commit patch push pub:npm",
+        "pub:npm": "npm publish"
     },
     "author": "",
     "license": "ISC",
-    "dependencies": {},
     "devDependencies": {
-        "@types/jest": "^26.0.23"
+        "@types/jest": "^26.0.23",
+        "npm-run-all": "^4.1.5"
     },
     "repository": {
         "type": "git",
