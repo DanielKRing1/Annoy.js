@@ -1,41 +1,41 @@
 {
-    "name": "annoy.js",
-    "version": "2.1.2",
-    "description": "",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
-    "files": [
-        "dist/**/*"
-    ],
-    "scripts": {
-        "test": "npm run build && npx jest",
-        "build": "tsc -p tsconfig-build.json",
-        "build:commit": "npm run commit -- \"New build\"",
-        "commit": "git add . && git commit -m ",
-        "patch": "npm version patch",
-        "push": "git push origin main",
-        "pub": "run-s build build:commit patch push pub:npm",
-        "pub:npm": "npm publish"
-    },
-    "author": "",
-    "license": "ISC",
-    "devDependencies": {
-        "@types/jest": "^26.0.23",
-        "npm-run-all": "^4.1.5"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/DanielKRing1/Annoy.js.git"
-    },
-    "keywords": [
-        "tree",
-        "binary tree",
-        "knn",
-        "nearest neighbors",
-        "annoy",
-        "hyperplane",
-        "hyperplane search tree",
-        "vector search tree",
-        "n dimenesional"
-    ]
+  "name": "annoy.js",
+  "version": "2.1.2",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "scripts": {
+    "test": "npm run build && npx jest",
+    "build": "tsc -p tsconfig-build.json",
+    "build:commit": "npm run commit -- \"New build\"",
+    "commit": "git add . && git commit -m ",
+    "patch": "npm version patch",
+    "push": "git push origin main",
+    "pub": "run-s -c build build:commit patch push pub:npm",
+    "pub:npm": "npm publish"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "npm-run-all": "^4.1.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DanielKRing1/Annoy.js.git"
+  },
+  "keywords": [
+    "tree",
+    "binary tree",
+    "knn",
+    "nearest neighbors",
+    "annoy",
+    "hyperplane",
+    "hyperplane search tree",
+    "vector search tree",
+    "n dimenesional"
+  ]
 }
