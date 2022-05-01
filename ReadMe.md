@@ -16,36 +16,70 @@ npm install annoy.js
 
 ## Example
 
-```python
+```javascript
 import Annoy from 'annoy.js';
 
+// USING ANNOY TO QUERY K APPROXIMATE NEAREST NEIGHBORS
+
 // 0. Define Annoy constants
-const FOREST_SIZE = 10;
-const MAX_LEAF_SIZE = 50
+const FOREST_SIZE: number = 10;
+const MAX_LEAF_SIZE: number = 50;
+const VECTOR_LEN: number = 10;
 
 // 1. Init Annoy with constants
-const a: Annoy = new Annoy(FOREST_SIZE, MAX_LEAF_SIZE);
+const a: Annoy = new Annoy(FOREST_SIZE, VECTOR_LEN, MAX_LEAF_SIZE);
 
-// 2. Fill Annoy forest with random points
-const DIMENSIONS = 10;
-const POINT_COUNT = 10000;
+// 2. Generate random data points to add to the Annoy forest
+const POINT_COUNT = 100000;
+const dataPoints: DataPoint[] = [];
 for (let i = 0; i < POINT_COUNT; i++) {
-    const p = [...new Array(DIMENSIONS)].map(() => Math.random() * 40);
+    const vector: Vector = [...new Array(VECTOR_LEN)].map(() => Math.random() * 40);
 
-    a.add(p);
+    const dp: DataPoint = {
+        // Include a 'vector' property
+        vector,
+        // Add random data to the 'data' property
+        data: i,
+    };
+
+    dataPoints.push(dp);
 }
 
-// 3. Query K Approximate Nearest Neighbors to a random point
-const K = 100;
-const randomPoint = [...new Array(VECTOR_LEN)].map(() => Math.random() * 40);
+// 3. Fill Annoy forest with our data points
+for (let i = 0; i < dataPoints.length; i++) {
+    const dp: DataPoint = dataPoints[i];
 
-const knn: Vector[] = a.get(
-    randomPoint,
-    K
-);
+    a.add(dp);
+}
 
-// 4. Log results
-console.log(knn);
+// 4. Query K Approximate Nearest Neighbors to a random point
+const K = 20;
+const p: Vector = [...new Array(VECTOR_LEN)].map(() => Math.random() * 40);
+const knn: DataPoint[] = a.get(p, K);
+
+// 5. Log our random query point and its K approximate nearest neighbors
+console.log(p);
+console.log(knn.length);
+
+// ----
+
+// SAVING/LOADING ANNOY TO/FROM A JSON OBJECT
+
+// 1. Serialize to json
+const asJson: AnnoyJson = a.toJson();
+const asJsonStr: string = JSON.stringify(asJson);
+
+// 2. Deserialize back to an Annoy instance
+const rebuiltTree: Annoy = new Annoy(FOREST_SIZE, VECTOR_LEN, MAX_VALUES);
+console.time('Rebuilt Annoy fromJson');
+rebuiltTree.fromJson(asJsonStr);
+console.timeEnd('Rebuilt Annoy fromJson');
+
+// 3. Get KNN from rebuilt Annoy
+console.time('Rebuilt Annoy KNN');
+const rebuiltKnn: DataPoint[] = a.get(p, K);
+console.timeEnd('Rebuilt Annoy KNN');
+
 ```
 
 ## Public Api
