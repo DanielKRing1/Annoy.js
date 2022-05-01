@@ -70,7 +70,7 @@ const asJson: AnnoyJson = a.toJson();
 const asJsonStr: string = JSON.stringify(asJson);
 
 // 2. Deserialize back to an Annoy instance
-const rebuiltTree: Annoy = new Annoy(FOREST_SIZE, VECTOR_LEN, MAX_VALUES);
+const rebuiltTree: Annoy = new Annoy(FOREST_SIZE, VECTOR_LEN, MAX_LEAF_SIZE);
 console.time('Rebuilt Annoy fromJson');
 rebuiltTree.fromJson(asJsonStr);
 console.timeEnd('Rebuilt Annoy fromJson');
