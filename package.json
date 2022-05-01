@@ -21,7 +21,10 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^26.0.23",
-    "npm-run-all": "^4.1.5"
+    "jest": "27",
+    "npm-run-all": "^4.1.5",
+    "ts-jest": "^27.1.4",
+    "typescript": "^4.6.4"
   },
   "repository": {
     "type": "git",
