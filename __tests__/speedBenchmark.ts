@@ -15,11 +15,11 @@ const a2: Annoy = new Annoy(FOREST_SIZE, VECTOR_LEN, MAX_VALUES);
 const POINT_COUNT = 100000;
 const dataPoints: DataPoint[] = [];
 for (let i = 0; i < POINT_COUNT; i++) {
-    const vector: Vector = [...new Array(VECTOR_LEN)].map(() => Math.random() * 40);
+    const v: Vector = [...new Array(VECTOR_LEN)].map(() => Math.random() * 40);
 
     const dp: DataPoint = {
-        vector,
-        data: i,
+        v,
+        d: i,
     };
 
     dataPoints.push(dp);

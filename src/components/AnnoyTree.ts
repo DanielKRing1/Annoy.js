@@ -104,7 +104,7 @@ export class AnnoyTree {
                         const p: DataPoint = pool.pop() as DataPoint;
 
                         // 5.1. Categorize a point as "right" or "left" based on distance from dividing line ( >= 0 is right, < 0 is left )
-                        const side: number = this.dividingHyperplane.getSide(p.vector);
+                        const side: number = this.dividingHyperplane.getSide(p.v);
 
                         // 5.2. Add points to 'leftBulk' or 'rightBulk'
                         if (side >= 0) rightBulk.push(p);
@@ -132,7 +132,7 @@ export class AnnoyTree {
                     const p: DataPoint = bulkPoints.pop() as DataPoint;
 
                     // 1.1. Categorize a point as "right" or "left" based on distance from dividing line ( >= 0 is right, < 0 is left )
-                    const side: number = this.dividingHyperplane.getSide(p.vector);
+                    const side: number = this.dividingHyperplane.getSide(p.v);
 
                     // 1.2. Add points to 'leftBulk' or 'rightBulk'
                     if (side >= 0) rightBulk.push(p);
@@ -149,8 +149,8 @@ export class AnnoyTree {
 
     // ERROR CHECKING
 
-    private validateDataPoint(vd: DataPoint): void {
-        this.validatePoint(vd.vector);
+    private validateDataPoint(dp: DataPoint): void {
+        this.validatePoint(dp.v);
     }
 
     private validatePoint(p: Vector): void {
@@ -188,14 +188,14 @@ export class AnnoyTree {
     // SPLITTING UTILS
 
     private genDividingHyperplane(): Hyperplane {
-        const dim: number = this.values[0].vector.length;
+        const dim: number = this.values[0].v.length;
 
         // 1. Sum Vectorsin this.values
         const vectorCount: number = this.values.length;
         let vectorSum: Vector = new Array(dim).fill(0);
         for (let i = 0; i < vectorCount; i++) {
             const curPoint = this.values[i];
-            vectorSum = addVectors(vectorSum, curPoint.vector);
+            vectorSum = addVectors(vectorSum, curPoint.v);
         }
 
         // 2. Divide vectorSum by vectorCount to get average vector/ centroid
@@ -213,9 +213,16 @@ export class AnnoyTree {
 
     private trickleDown(p: DataPoint): void {
         // Categorize a point as "right" or "left" based on distance from dividing line
-        const side: AnnoyTree = this.chooseSide(p.vector);
+        const side: AnnoyTree = this.chooseSide(p.v);
 
         side.addPoint(p);
+    }
+
+    private _valuesTo(): Object[] {
+        return this.values.map((value: DataPoint) => ({
+            d: value.d,
+            v: value.v,
+        }));
     }
 
     public toJson(): InnerNode | LeafNode {

@@ -33,13 +33,13 @@ const a: Annoy = new Annoy(FOREST_SIZE, VECTOR_LEN, MAX_LEAF_SIZE);
 const POINT_COUNT = 100000;
 const dataPoints: DataPoint[] = [];
 for (let i = 0; i < POINT_COUNT; i++) {
-    const vector: Vector = [...new Array(VECTOR_LEN)].map(() => Math.random() * 40);
+    const v: Vector = [...new Array(VECTOR_LEN)].map(() => Math.random() * 40);
 
     const dp: DataPoint = {
         // Include a 'vector' property
-        vector,
+        v,
         // Add random data to the 'data' property
-        data: i,
+        d: i,
     };
 
     dataPoints.push(dp);

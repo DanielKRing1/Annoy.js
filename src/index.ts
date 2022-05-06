@@ -33,7 +33,7 @@ export default class Annoy {
 
         if (max && closestFromAllTrees.size > max)
             result = Array.from(closestFromAllTrees)
-                .sort((a: Types.DataPoint, b: Types.DataPoint) => vectorDistSqr(a.vector, inputVector) - vectorDistSqr(b.vector, inputVector))
+                .sort((a: Types.DataPoint, b: Types.DataPoint) => vectorDistSqr(a.v, inputVector) - vectorDistSqr(b.v, inputVector))
                 .slice(0, max);
         else result = Array.from(closestFromAllTrees);
 

@@ -1,8 +1,12 @@
 export type Dict<T> = Record<string, T>;
 export type Vector = number[];
+/**
+ * 'd' for data
+ * 'v' for vector
+ */
 export type DataPoint = {
-    data: any;
-    vector: Vector;
+    d: any;
+    v: Vector;
 };
 
 export type AnnoyJson = {
