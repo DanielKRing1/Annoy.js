@@ -1,10 +1,10 @@
 # Annoy.js
 
-Annoy.js is a 0-dependency Hyperplane (Binary) Search Tree, inspired by Spotify Annoy \
+Annoy.js is a 0-dependency Hyperplane (Binary) Search Tree, inspired by Spotify Annoy
 
-Use this package to query for K Approximate Nearest Neighbors from a tree of n-dimensional vectors in O(logn) time. \
+Use this package to query for K Approximate Nearest Neighbors from a tree of n-dimensional vectors in O(logn) time.
 
-Follow here for more ---> <a href="https://erikbern.com/2015/10/01/nearest-neighbors-and-vector-models-part-2-how-to-search-in-high-dimensional-spaces.html" target="_blank">This Blog Post</a> \
+Follow here for more ---> <a href="https://erikbern.com/2015/10/01/nearest-neighbors-and-vector-models-part-2-how-to-search-in-high-dimensional-spaces.html" target="_blank">This Blog Post</a>
 
 Visualization for hyperplane search tree in 1/2/3 dimensions:
 <p float="left">
